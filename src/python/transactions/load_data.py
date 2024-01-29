@@ -5,7 +5,6 @@ import shutil
 from pathlib import Path
 
 import kuzu
-import util
 
 
 def create_client_node_table(conn: kuzu.Connection) -> None:
@@ -63,11 +62,52 @@ def create_merchant_node_table(conn: kuzu.Connection) -> None:
     )
 
 
+def create_transaction_edge_table(conn: kuzu.Connection) -> None:
+    """
+    Create a new file `transacted_with.csv` that stores the
+    edges between clients and merchants, with metadata.
+    No headers are written
+    """
+    conn.execute(
+    f"""
+    COPY (
+        LOAD FROM '{DATA_PATH}/transaction.csv' (header=true)
+        RETURN
+            client_id,
+            merchant_id,
+            amount_usd,
+            timestamp
+    )
+    TO '{DATA_PATH}/transacted_with.csv';
+    """
+    )
+
+
+def create_merchant_edge_table(conn: kuzu.Connection) -> None:
+    """
+    Create a new file `has_instance.csv` that stores the
+    edges between companies and merchants
+    No headers are written
+    """
+    conn.execute(
+    f"""
+    COPY (
+        LOAD FROM '{DATA_PATH}/merchant.csv' (header=true)
+        RETURN
+            company_id,
+            merchant_id
+    )
+    TO '{DATA_PATH}/has_instance.csv';
+    """
+    )
+
+
 def create_node_tables(conn: kuzu.Connection) -> None:
     create_client_node_table(conn)
     create_city_node_table(conn)
     create_company_node_table(conn)
     create_merchant_node_table(conn)
+    print("Successfully loaded nodes into KùzuDB!")
 
 
 def create_edge_tables(conn: kuzu.Connection) -> None:
@@ -86,25 +126,43 @@ def create_edge_tables(conn: kuzu.Connection) -> None:
     conn.execute("CREATE REL TABLE HasInstance(FROM Company TO Merchant)")
 
 
-def main(conn: kuzu.Connection, data_path: Path) -> None:
+def create_location_in_edge_table(conn: kuzu.Connection) -> None:
+    """
+    Create a new file `located_in.csv` that stores the
+    edges between merchants and cities
+    No headers are written
+    """
+    conn.execute(
+    f"""
+    COPY (
+        LOAD FROM '{DATA_PATH}/merchant.csv' (header=true)
+        RETURN
+            merchant_id,
+            city_id
+    )
+    TO '{DATA_PATH}/located_in.csv';
+    """
+    )
+
+
+def main(conn: kuzu.Connection, DATA_PATH: Path) -> None:
     # Create edge table files from existing data
-    util.create_transaction_edge_file(data_path)
-    util.create_merchant_instance_edge_file(data_path)
-    util.create_merchant_city_edge_file(data_path)
+    create_transaction_edge_table(conn)
+    create_merchant_edge_table(conn)
+    create_location_in_edge_table(conn)
 
     # Ingest nodes
     create_node_tables(conn)
-    conn.execute(f"COPY Client FROM '{data_path}/client.csv' (header=true);")
-    conn.execute(f"COPY City FROM '{data_path}/city.csv' (header=true);")
-    conn.execute(f"COPY Company FROM '{data_path}/company.csv' (header=true);")
-    conn.execute(f"COPY Merchant FROM '{data_path}/merchant.csv' (header=true);")
-    print("Successfully loaded nodes into KùzuDB!")
+    conn.execute(f"COPY Client FROM '{DATA_PATH}/client.csv' (header=true);")
+    conn.execute(f"COPY City FROM '{DATA_PATH}/city.csv' (header=true);")
+    conn.execute(f"COPY Company FROM '{DATA_PATH}/company.csv' (header=true);")
+    conn.execute(f"COPY Merchant FROM '{DATA_PATH}/merchant.csv' (header=true);")
 
     # Ingest edges
     create_edge_tables(conn)
-    conn.execute(f"COPY TransactedWith FROM '{data_path}/transacted_with.csv' (header=true);")
-    conn.execute(f"COPY LocatedIn FROM '{data_path}/located_in.csv' (header=true);")
-    conn.execute(f"COPY HasInstance FROM '{data_path}/has_instance.csv' (header=true);")
+    conn.execute(f"COPY TransactedWith FROM '{DATA_PATH}/transacted_with.csv' (header=true);")
+    conn.execute(f"COPY HasInstance FROM '{DATA_PATH}/has_instance.csv' (header=true);")
+    conn.execute(f"COPY LocatedIn FROM '{DATA_PATH}/located_in.csv' (header=true);")
     print("Successfully loaded edges into KùzuDB!")
 
 
@@ -117,6 +175,6 @@ if __name__ == "__main__":
     db = kuzu.Database(f"./{DB_NAME}")
     conn = kuzu.Connection(db)
 
-    data_path = "./data"
+    DATA_PATH = "./data"
 
-    main(conn, data_path)
+    main(conn, DATA_PATH)
