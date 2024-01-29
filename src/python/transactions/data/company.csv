@@ -1,7 +1,7 @@
 company_id,type,company
-1,hotel,"Mariott Bonvoy Hotel"
-2,telecom,"Verizon Wireless"
-3,airline,"Delta Airlines"
+1,telecom,"Verizon Wireless"
+2,hotel,"Mariott Bonvoy Hotel"
+3,hotel,"Hilton Hotels & Resorts"
 4,restaurant,"Panera Bread"
 5,restaurant,"Starbucks"
 6,retail,"Walmart"
