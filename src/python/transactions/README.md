@@ -35,3 +35,25 @@ dataset. The queries are written in Cypher.
 ```bash
 python query.py
 ```
+
+## Visualization
+
+Visualization of the graph can be done using the [Kuzu Explorer](https://github.com/kuzudb/explorer)
+tool. You can start an instance of the Explorer using a Docker command.
+
+```bash
+# Ensure you use absolute paths when mounting the database
+docker run -p 8000:8000 \
+        -v /absolute/path/to/transaction_db:/database \
+        --rm kuzudb/explorer:latest
+```
+
+Alternatively, you can use the provided `docker-compose.yml` configured with the relative path
+to your data and start/stop the container as follows:
+
+```bash
+# Run container in detached mode
+docker compose up -d
+# Stop container
+docker compose down
+```
