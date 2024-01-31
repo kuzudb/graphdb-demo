@@ -16,11 +16,12 @@ def query_1(conn: kuzu.Connection) -> None:
 
 
 def query_2(conn: kuzu.Connection) -> None:
-    "Which city has the most merchant transactions?"
+    "Q2. Who are the clients who transacted with at least 2 separate merchants operating in Los Angeles?"
     query = """
-        MATCH (:Client)-[t:TransactedWith]->(m:Merchant)-[:LocatedIn]->(city:City)
-        RETURN city.city as city, COUNT(t) AS numTransactions
-        ORDER BY numTransactions DESC LIMIT 1;
+        MATCH (c:Client)-[:TransactedWith]->(m1:Merchant)-[:LocatedIn]->(ci:City),
+            (c)-[:TransactedWith]->(m2:Merchant)-[:LocatedIn]->(ci)
+        WHERE ci.city = "Los Angeles" AND m1.merchant_id <> m2.merchant_id
+        RETURN DISTINCT c.client_id AS id, c.name as name;
     """
     print(f"\nQuery 2:\n {query}")
     response = conn.execute(query)
