@@ -2,11 +2,11 @@ import kuzu
 
 
 def query_1(conn: kuzu.Connection) -> None:
-    "Who are the clients that made transactions in at least one of the merchants with IDs 2 and 11?"
+    "Q1. Who are the clients that transacted with the merchants of 'Starbucks'?"
     query = """
-        MATCH (m1:Merchant {merchant_id: 7})<-[:TransactedWith]-(a:Client)-[:TransactedWith]->(m2:Merchant {merchant_id: 11}),
-        (b:Client)-[:TransactedWith]->(m3:Merchant)
-        RETURN DISTINCT b.client_id AS id, b.name as name
+        MATCH (c:Client)-[:TransactedWith]->(:Merchant)-[:BelongsTo]->(co:Company)
+        WHERE co.company = "Starbucks"
+        RETURN DISTINCT c.client_id AS id, c.name AS name;
     """
     print(f"\nQuery 1:\n {query}")
     response = conn.execute(query)
@@ -30,11 +30,12 @@ def query_2(conn: kuzu.Connection) -> None:
 
 
 def query_3(conn: kuzu.Connection) -> None:
-    "Which company has the most merchants?"
+    "Q3. Which companies have merchants in New York City, Boston **and** Los Angeles?"
     query = """
-        MATCH (m:Merchant)-[:BelongsTo]->(co:Company)
-        RETURN co.company AS company, COUNT(m) AS numMerchants
-        ORDER BY numMerchants DESC LIMIT 1;
+        MATCH (:City {city: "New York City"})<-[]-(m1:Merchant)-[]->(co:Company),
+            (:City {city: "Boston"})<-[]-(m2)-[]->(co),
+            (:City {city: "Los Angeles"})<-[]-(m3)-[]->(co)
+        RETURN DISTINCT co.company AS company
     """
     print(f"\nQuery 3:\n {query}")
     response = conn.execute(query)
@@ -44,12 +45,11 @@ def query_3(conn: kuzu.Connection) -> None:
 
 
 def query_4(conn: kuzu.Connection) -> None:
-    "Which company has the most merchant transactions above 100 dollars?"
+    "Q4. How many common connections (cities, merchants, companies) exist between Client IDs 4 and 5?"
     query = """
-        MATCH (:Client)-[t:TransactedWith]-(:Merchant)-[:BelongsTo]->(co:Company)
-        WHERE t.amount_usd > 100
-        RETURN co.company AS company, COUNT(t) AS numTransactions
-        ORDER BY numTransactions DESC LIMIT 1;
+        MATCH (c1:Client)-[*1..2]->(common)<-[*1..2]-(c2:Client)
+        WHERE c1.client_id = 4 AND c2.client_id = 5
+        RETURN label(common) AS connectionType, COUNT(label(common)) AS count;
     """
     print(f"\nQuery 4:\n {query}")
     response = conn.execute(query)
