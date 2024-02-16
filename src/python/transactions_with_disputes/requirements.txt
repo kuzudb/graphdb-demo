@@ -1,0 +1,4 @@
+kuzu~=0.2.0
+faker~=22.0.0
+polars~=0.20.0
+pyarrow~=15.0.0
