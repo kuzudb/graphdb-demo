@@ -76,7 +76,8 @@ def create_edge_tables(conn: kuzu.Connection) -> None:
                 FROM Client TO Merchant,
                 transaction_id INT64,
                 amount_usd FLOAT,
-                timestamp TIMESTAMP
+                timestamp TIMESTAMP,
+                is_disputed BOOLEAN
             )
         """
     )
