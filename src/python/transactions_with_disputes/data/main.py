@@ -96,7 +96,7 @@ def write_transaction_csv(
         merchant_id = random.choice(merchant_ids)
         amount = get_random_amount_usd(get_company_type(companies_df, merchant_lookup[merchant_id]))
         timestamp = f"{fake.date_between(start_date='-1y', end_date='now')} {fake.time()}"
-        tuples = (i, client_id, merchant_id, amount, timestamp)
+        tuples = (i, client_id, merchant_id, amount, timestamp, False)
         transactions.append(tuples)
 
     # Randomly sample 2% of clients to have more transactions than others
@@ -111,17 +111,24 @@ def write_transaction_csv(
                     get_company_type(companies_df, merchant_lookup[merchant_id])
                 )
                 timestamp = f"{fake.date_between(start_date='-1y', end_date='now')} {fake.time()}"
-                tuples = (i + n, client_id, merchant_id, amount, timestamp)
+                tuples = (i + n, client_id, merchant_id, amount, timestamp, False)
                 transactions.append(tuples)
 
     df = pl.DataFrame(
         transactions,
-        schema=["transaction_id", "client_id", "merchant_id", "amount_usd", "timestamp"],
+        schema=[
+            "transaction_id",
+            "client_id",
+            "merchant_id",
+            "amount_usd",
+            "timestamp",
+            "is_disputed",
+        ],
     )
     # Write `transacted_with.csv` edge file with transaction_id as an edge property
-    df.select("client_id", "merchant_id", "transaction_id", "amount_usd", "timestamp").write_csv(
-        f"{REL_PATH}/transacted_with.csv", include_header=False
-    )
+    df.select(
+        "client_id", "merchant_id", "transaction_id", "amount_usd", "timestamp", "is_disputed"
+    ).write_csv(f"{REL_PATH}/transacted_with.csv", include_header=False)
     print(f"Wrote {len(df)} transactions to transacted_with.csv")
 
 
