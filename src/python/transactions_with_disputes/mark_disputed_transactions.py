@@ -1,5 +1,4 @@
 import csv
-import dis
 from pathlib import Path
 from typing import Any
 
