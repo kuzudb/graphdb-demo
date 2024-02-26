@@ -62,6 +62,11 @@ docker compose up -d
 docker compose down
 ```
 
-## To do
+## Running graph algorithms
 
-- [ ] Add a section on running the network analysis script
+The `analyze.py` script contains some examples of NetworkX algorithms that can be run on the Kùzu
+graph.
+
+```bash
+python analyze.py
+```
