@@ -1,0 +1,4 @@
+pyarrow==16.0.0
+polars==0.20.25
+kuzu==0.4.1
+sentence-transformers==2.7.0
