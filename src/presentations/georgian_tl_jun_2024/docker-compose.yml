@@ -8,6 +8,3 @@ services:
       - 8000:8000
     volumes:
       - ./data/db/kuzudb:/database
-
-volumes:
-  transaction_db:
