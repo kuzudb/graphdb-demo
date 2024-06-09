@@ -13,11 +13,11 @@
 
 # Graph demos and use cases
 
-This repo contains recipes and starter code for various graph use cases in KùzuDB. Feel free to clone/fork the repo and use the code in your own projects!
+This repo contains recipes and starter code for various graph use cases in Kùzu. Feel free to clone/fork the repo and modify the code for your own projects!
 
 ## Getting Started
 
-In addition to a [command line utility](https://kuzudb.com/docusaurus/getting-started/cli), Kùzu has a number of client SDKs available allowing you to interface with the database in your language of choice. Currently, the following languages are supported:
+In addition to a [command line tool](https://kuzudb.com/docusaurus/getting-started/cli), Kùzu has a number of client libraries available that allow you to interface with the database in your language of choice. Currently, the following languages are supported:
 
 - Python
 - Node.js
@@ -26,11 +26,11 @@ In addition to a [command line utility](https://kuzudb.com/docusaurus/getting-st
 - Java
 - Rust
 
-You can find the latest list of SDKs in the [docs](https://kuzudb.com/docusaurus/getting-started/).
+You can find the latest list of language clients in the [docs](https://docs.kuzudb.com/client-apis/).
 
 ## Setting up Kùzu
 
-Kùzu is an embedded database that runs in-process, so there's no server to set up. Simply install the client SDK for your language of choice and you're ready to go! A couple of examples are shown below.
+Kùzu is an embedded database that runs in-process, so there's no server to set up. Simply install the client library for your language of choice and you're ready to go! A couple of examples are shown below.
 
 ### Python
 
@@ -52,4 +52,3 @@ For Node.js users, install the `kuzu` package via `npm`.
 # Assuming Node.js 19+ is installed
 npm install kuzu
 ```
-
