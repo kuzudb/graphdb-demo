@@ -34,14 +34,16 @@ Kùzu is an embedded database that runs in-process, so there's no server to set 
 
 ### Python
 
-For Python users using local Jupyter notebooks or Python scripts, simply install the `kuzu` package via `pip`.
+For Python users using local Jupyter notebooks or Python scripts, it's recommended to
+install Kùzu as follows:
 
 ```bash
-# Set up a virtual environment
-python -m venv venv
-source venv/bin/activate
-# Assuming Python 3.8+ is installed
-pip install kuzu
+# Set up a virtual environment using the uv package manager
+# https://github.com/astral-sh/uv
+uv venv
+source .venv/bin/activate
+# Install kuzu
+uv pip install kuzu
 ```
 
 ### JavaScript
