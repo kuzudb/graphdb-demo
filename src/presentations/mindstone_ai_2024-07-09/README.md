@@ -1,4 +1,9 @@
-# Dataset
+# Mindstone AI Meetup
+
+This repo contains the code to reproduce the demo presented at the Mindstone AI Meetup
+in Toronto on 9 July 2024.
+
+## Dataset
 
 This demo uses a wine reviews dataset downloaded [from Kaggle](https://www.kaggle.com/datasets/zynicide/wine-reviews). The dataset consists of 130k wine reviews with the variety, location, winery, price, description, and some other metadata provided for each wine.
 
@@ -56,3 +61,50 @@ The following files will be generated:
 
 Once these files exist, you can proceed to run the demo notebooks!
 
+## Notebooks
+
+The demo consists of three notebooks:
+
+- `demo_1.ipynb`: Ingest the data to Kùzu and perform some basic exploratory data analysis.
+- `demo_2.ipynb`: Learn how to Kùzu's `GraphQAChain` in LangChain to query the graph using an LLM.
+- `demo_3.ipynb`: Run a graph algorithm to find the most influential tasters in the network, and learn how to use Kùzu as a backend to PyTorch Geometric for graph machine learning.
+
+## Setup
+
+To run the notebooks, you will need to install the dependencies using `requirements.txt`. You can do this by running:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
+
+Activate the virtual environment in Jupyter Notebook by creating a new `ipython` kernel:
+
+```bash
+ipython kernel install --user --name=.venv
+```
+
+Then, start Jupyter Notebook and connect to the kernel you just created so your Python dependencies are available in the notebook.
+
+## Visualization
+
+You can visualize the Kùzu graph using the Kùzu Explorer tool. Download and install Docker, and run the
+provided `docker-compose.yml` file to start Kùzu Explorer on your machine. Simply ensure that
+the directory to the local database directory is correctly specified in `docker-compose.yml`.
+
+```bash
+docker compose up
+```
+
+ALternatively, you can run the following Docker command from the terminal, once again taking care to
+ensure that the correct path to the local database directory is specified:
+
+```bash
+docker run -p 8000:8000 \
+           -v ./db:/database \
+           -e MODE=READ_ONLY \
+           --rm kuzudb/explorer:latest
+```
+
+Open a web browser and navigate to `http://localhost:8000` to work within Kùzu Explorer.
