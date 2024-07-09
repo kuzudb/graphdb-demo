@@ -6,7 +6,7 @@ from pathlib import Path
 
 output_path = Path("../final")
 
-FILE_NAME = "winemag-data-130k-v2.csv"
+FILE_NAME = "winemag-data-v2-small.csv"
 df = pl.read_csv(f"../{FILE_NAME}").rename({"": "id"})
 wines = df.select([
     "id",
