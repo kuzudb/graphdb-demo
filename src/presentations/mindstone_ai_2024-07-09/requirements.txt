@@ -1,0 +1,15 @@
+kuzu==0.4.2
+duckdb==1.0.0
+polars==1.1.0
+pyarrow==16.1.0
+networkx==3.3.0
+pandas==2.2.2
+numpy~=1.26.0
+scipy==1.14.0
+faker==26.0.0
+torch==2.3.1
+torch-geometric==2.5.3
+langchain==0.2.7
+langchain-community==0.2.7
+langchain-openai==0.1.14
+python-dotenv==1.0.1

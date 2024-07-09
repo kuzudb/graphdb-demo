@@ -157,6 +157,3 @@ cython_debug/
 
 # Custom
 src/python/external_db
-src/presentations/georgian_tl_jun_2024/data/winemag-data-130k-v2.csv
-src/presentations/georgian_tl_jun_2024/data/final/winemag-reviews.parquet
-src/presentations/georgian_tl_jun_2024/db/
