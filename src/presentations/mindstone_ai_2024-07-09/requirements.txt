@@ -12,3 +12,4 @@ torch-geometric==2.5.3
 langchain==0.2.7
 langchain-community==0.2.7
 langchain-openai==0.1.14
+python-dotenv==1.0.1
