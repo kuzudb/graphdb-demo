@@ -63,7 +63,23 @@ bash run_all.sh
 This will insert the data into the Postgres database, copy the data to Kùzu, run the graph analytics
 to compute the betweenness centrality of the account nodes, and write the results back to the Postgres database.
 
-## Results
+## Data visualization
+
+The schema of the graph constructed from the Postgres data is as follows:
+
+<img src="./assets/schema-viz.png" width="500">
+
+It consists of the following data:
+- 21 nodes of type Person
+- 21 nodes of type Account (each Person has exactly one account)
+- 15 nodes of type Address
+- 21 relationships of type Transfer, where the transfers are directed from a source account s that has transferred money to a destination account d.
+
+The resulting graph from this dataset has interesting structures, and is small enough to visualize all at once in Kùzu explorer. An example visualization is shown below:
+
+<img src="./assets/graph-viz.png">
+
+## Analysis results
 
 The results are stored in the `account` table in the Postgres database. The `betweenness_centrality` column
 contains the computed betweenness centrality values for each account node.
@@ -83,4 +99,4 @@ the node with the highest betweenness centrality (account_id = 069392555), can b
 The account is owned by the person named "Amanda", whose account sees 3 incoming transfers and 2
 outgoing transfers, and is connected to 5 other accounts, making it a key node in the network.
 
-![](./assets/betweenness_centrality.png)
+<img src="./assets/betweenness-centrality.png" width="500">
