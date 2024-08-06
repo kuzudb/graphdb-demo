@@ -1,5 +1,6 @@
-import kuzu
 import shutil
+
+import kuzu
 
 shutil.rmtree("./ex_db_kuzu", ignore_errors=True)
 db = kuzu.Database("./ex_db_kuzu")

@@ -1,13 +1,15 @@
 import asyncio
+
+import asyncpg
 import kuzu
 import networkx as nx
-import asyncpg
 from asyncpg.pool import Pool
 
 PG_URI = "postgresql://postgres:testpassword@localhost:5432/postgres"
 db = kuzu.Database("./ex_db_kuzu")
 conn = kuzu.Connection(db)
-print(f"Kùzu version: {kuzu.__version__}")
+# print(f"Kùzu version: {kuzu.__version__}")
+
 
 def get_betweenness_centrality_records() -> list[dict[str, float]]:
     res = conn.execute(
@@ -19,7 +21,9 @@ def get_betweenness_centrality_records() -> list[dict[str, float]]:
 
     G = res.get_as_networkx(directed=False)
     bc = nx.betweenness_centrality(G, normalized=True)
-    bc_records = [{"id": node.replace("Account_", ""), "betweenness_centrality": bc[node]} for node in bc]
+    bc_records = [
+        {"id": node.replace("Account_", ""), "betweenness_centrality": bc[node]} for node in bc
+    ]
     return bc_records
 
 
@@ -29,7 +33,8 @@ async def update_accounts_table(pool: Pool) -> None:
             """
             ALTER TABLE account
             ADD COLUMN IF NOT EXISTS betweenness_centrality REAL DEFAULT 0.0
-            """)
+            """
+        )
 
 
 async def insert_betweenness_centrality_records(pool: Pool, records: list[dict]) -> None:
@@ -45,7 +50,9 @@ async def main():
         bc_records = get_betweenness_centrality_records()
         await update_accounts_table(pool)
         await insert_betweenness_centrality_records(pool, bc_records)
-        print(f"Finished loading {len(bc_records)} betweenness centrality records to Postgres table")
+        print(
+            f"Finished loading {len(bc_records)} betweenness centrality records to Postgres table"
+        )
 
 
 if __name__ == "__main__":

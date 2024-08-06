@@ -1,8 +1,9 @@
 import asyncio
 import csv
+from typing import Any, Dict
+
 import asyncpg
 from asyncpg.pool import Pool
-from typing import Dict, Any
 
 Record = Dict[str, Any]
 PG_URI = "postgresql://postgres:testpassword@localhost:5432/postgres"
@@ -10,7 +11,7 @@ PG_URI = "postgresql://postgres:testpassword@localhost:5432/postgres"
 
 # Import CSV as a list of dictionaries
 def import_csv(file_path: str) -> list[Record]:
-    with open(file_path, "r") as file:
+    with open(file_path) as file:
         reader = csv.DictReader(file)
         return list(reader)
 
