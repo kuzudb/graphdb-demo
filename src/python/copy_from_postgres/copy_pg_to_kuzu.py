@@ -12,8 +12,6 @@ conn.execute(
     CREATE NODE TABLE Person (
         id INT32,
         name STRING,
-        state STRING,
-        zip STRING,
         email STRING,
         PRIMARY KEY (id)
     )

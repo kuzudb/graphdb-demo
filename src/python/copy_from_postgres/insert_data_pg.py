@@ -29,8 +29,6 @@ async def create_person_table(pool: Pool):
                 id INTEGER PRIMARY KEY,
                 name VARCHAR,
                 address VARCHAR(512),
-                state VARCHAR(2),
-                zipcode VARCHAR(12),
                 email VARCHAR(128)
             )
             """
@@ -73,17 +71,13 @@ async def insert_person_record(pool: Pool, record: Record):
                 id,
                 name,
                 address,
-                state,
-                zipcode,
                 email
             )
-            VALUES ($1, $2, $3, $4, $5, $6);
+            VALUES ($1, $2, $3, $4);
             """,
             int(record["id"]),
             record["name"],
             record["address"],
-            record["state"],
-            record["zipcode"],
             record["email"],
         )
 
