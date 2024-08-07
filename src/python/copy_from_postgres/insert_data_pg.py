@@ -140,13 +140,13 @@ async def main():
         await truncate_tables(pool)
         # Insert records asynchronously
         await asyncio.gather(*[insert_person_record(pool, record) for record in person_records])
-        print(f"Finished loading {len(person_records)} person records")
+        print(f"Inserted {len(person_records)} person records")
 
         await asyncio.gather(*[insert_account_record(pool, record) for record in account_records])
-        print(f"Finished loading {len(account_records)} account records")
+        print(f"Inserted {len(account_records)} account records")
 
         await asyncio.gather(*[insert_transfer_record(pool, record) for record in transfer_records])
-        print(f"Finished loading {len(transfer_records)} transfer records")
+        print(f"Inserted {len(transfer_records)} transfer records")
 
 
 if __name__ == "__main__":

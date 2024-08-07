@@ -3,6 +3,7 @@ import asyncio
 import asyncpg
 import kuzu
 import networkx as nx
+import polars as pl
 from asyncpg.pool import Pool
 
 PG_URI = "postgresql://postgres:testpassword@localhost:5432/postgres"
@@ -27,6 +28,35 @@ def get_betweenness_centrality_records() -> list[dict[str, float]]:
     return bc_records
 
 
+# --- Write results to Kùzu ---
+
+
+def update_account_node_table(conn: kuzu.Connection) -> None:
+    try:
+        conn.execute(
+            """
+            ALTER TABLE Account ADD betweenness_centrality REAL DEFAULT 0.0
+            """
+        )
+    except RuntimeError:
+        print("Column already exists, skipping creation.")
+
+
+def update_accounts_betweenness_centrality(bc_records: list[dict[str, float]]) -> None:
+    account_df = pl.DataFrame(bc_records)
+    conn.execute(
+        """
+        LOAD FROM account_df
+        WITH CAST(id AS INT32) AS id, betweenness_centrality
+        MERGE (a:Account {id: id})
+        ON MATCH SET a.betweenness_centrality = betweenness_centrality
+        """
+    )
+    print(f"Inserted {len(bc_records)} betweenness centrality records to Kùzu")
+
+
+# --- Write results to Postgres ---
+
 async def update_accounts_table(pool: Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(
@@ -46,13 +76,17 @@ async def insert_betweenness_centrality_records(pool: Pool, records: list[dict])
 
 
 async def main():
+    # Write results to postgres
     async with asyncpg.create_pool(PG_URI, min_size=5, max_size=20) as pool:
         bc_records = get_betweenness_centrality_records()
         await update_accounts_table(pool)
         await insert_betweenness_centrality_records(pool, bc_records)
         print(
-            f"Finished loading {len(bc_records)} betweenness centrality records to Postgres table"
+            f"Inserted {len(bc_records)} betweenness centrality records to Postgres table"
         )
+    # Write results to Kùzu
+    update_account_node_table(conn)
+    update_accounts_betweenness_centrality(bc_records)
 
 
 if __name__ == "__main__":
