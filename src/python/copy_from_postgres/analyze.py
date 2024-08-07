@@ -29,8 +29,6 @@ def get_betweenness_centrality_records() -> list[dict[str, float]]:
 
 
 # --- Write results to Kùzu ---
-
-
 def update_account_node_table(conn: kuzu.Connection) -> None:
     try:
         conn.execute(
@@ -56,7 +54,6 @@ def update_accounts_betweenness_centrality(bc_records: list[dict[str, float]]) -
 
 
 # --- Write results to Postgres ---
-
 async def update_accounts_table(pool: Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(
@@ -76,15 +73,13 @@ async def insert_betweenness_centrality_records(pool: Pool, records: list[dict])
 
 
 async def main():
-    # Write results to postgres
+    # Update Postgres database
     async with asyncpg.create_pool(PG_URI, min_size=5, max_size=20) as pool:
         bc_records = get_betweenness_centrality_records()
         await update_accounts_table(pool)
         await insert_betweenness_centrality_records(pool, bc_records)
-        print(
-            f"Inserted {len(bc_records)} betweenness centrality records to Postgres"
-        )
-    # Write results to Kùzu
+        print(f"Inserted {len(bc_records)} betweenness centrality records to Postgres")
+    # Update Kùzu database
     update_account_node_table(conn)
     update_accounts_betweenness_centrality(bc_records)
 
