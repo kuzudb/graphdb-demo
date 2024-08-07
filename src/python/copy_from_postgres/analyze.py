@@ -82,7 +82,7 @@ async def main():
         await update_accounts_table(pool)
         await insert_betweenness_centrality_records(pool, bc_records)
         print(
-            f"Inserted {len(bc_records)} betweenness centrality records to Postgres table"
+            f"Inserted {len(bc_records)} betweenness centrality records to Postgres"
         )
     # Write results to Kùzu
     update_account_node_table(conn)

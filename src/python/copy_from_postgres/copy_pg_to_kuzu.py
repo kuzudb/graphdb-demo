@@ -14,7 +14,12 @@ PG_CONNECTION_STRING = (
 conn.execute("LOAD EXTENSION postgres;")
 # Attach Postgres database
 conn.execute(
-    f"ATTACH '{PG_CONNECTION_STRING}' AS pg_db (dbtype postgres, skip_unsupported_table=false)"
+    f"""
+    ATTACH '{PG_CONNECTION_STRING}' AS pg_db (
+        dbtype postgres,
+        skip_unsupported_table=false
+    )
+    """
 )
 
 # Create node tables
@@ -39,7 +44,6 @@ conn.execute(
     )
     """
 )
-
 
 conn.execute(
     """
