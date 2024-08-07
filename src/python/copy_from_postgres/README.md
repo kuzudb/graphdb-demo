@@ -18,8 +18,8 @@ paths that pass through a node divided by the total number of shortest paths bet
 ## Setup
 
 Install the required dependencies via the `uv` package manager and `requirements.txt` file as follows:
-```
-# Crate a virtual environment
+```bash
+# Create a virtual environment
 uv venv
 # On macOS and Linux
 source .venv/bin/activate

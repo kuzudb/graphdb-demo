@@ -1,7 +1,6 @@
 services:
   explorer:
     image: kuzudb/explorer:latest
-    restart: unless-stopped
     environment:
       - MODE=READ_WRITE
     ports:
