@@ -26,6 +26,30 @@ uv sync
 
 This will set up the virtual environment and install all the dependencies locally on your machine.
 
+## Visualization
+
+Visualization of the graph requires the [Kuzu Explorer](https://github.com/kuzudb/explorer) tool.
+You can start an instance of the Explorer using a Docker command.
+```bash
+docker run -p 8000:8000 \
+           -v ./ex_kuzu_db:/database \
+           -e MODE=READ_ONLY \
+           --rm kuzudb/explorer:latest
+```
+Alternatively, you can use the provided docker-compose.yml configured with the relative path to your data and start/stop the container as follows:
+
+### Run container
+
+```bash
+docker compose up
+```
+
+### Stop container
+
+```bash
+docker compose down
+```
+
 ## Running the scripts
 
 ### Create the graph
@@ -41,7 +65,19 @@ This creates a movie graph with the following schema:
 
 ![](./assets/movie-schema.png)
 
-### Run Graph RAG
+From the shell editor in Kùzu Explorer, you can run the following Cypher query to display all the
+nodes and edges in the graph:
+
+```cypher
+MATCH (a)-[r]->(b)
+RETURN *a, r, b*
+LIMIT 100
+```
+
+![](./assets/interstellar-graph.png)
+
+
+### Graph RAG
 
 We will use the `ell` language model prompting framework to translate human questions from natural
 language to a structured query language (Cypher) that can be executed against the graph in Kùzu.
@@ -88,41 +124,5 @@ as context to the LLM, following which we get a response in natural language.
 
 For cases where you ask questions about data that isn't present in the graph, the LLM will return
 a response indicating that it doesn't know the answer.
-
-## Visualization
-
-Visualization of the graph requires the [Kuzu Explorer](https://github.com/kuzudb/explorer) tool.
-You can start an instance of the Explorer using a Docker command.
-
-### Ensure you use absolute paths when mounting the database
-```bash
-docker run -p 8000:8000 \
-           -v ./ex_kuzu_db:/database \
-           -e MODE=READ_ONLY \
-           --rm kuzudb/explorer:latest
-```
-Alternatively, you can use the provided docker-compose.yml configured with the relative path to your data and start/stop the container as follows:
-
-### Run container
-
-```bash
-docker compose up
-```
-
-### Stop container
-
-```bash
-docker compose down
-```
-
-As an example, you can run the following Cypher query to display all the nodes and edges in the graph:
-
-```cypher
-MATCH (a)-[r]->(b)
-RETURN a, r, b
-LIMIT 100
-```
-
-![](./assets/interstellar-graph.png)
 
 
