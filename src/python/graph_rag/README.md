@@ -70,7 +70,7 @@ nodes and edges in the graph:
 
 ```cypher
 MATCH (a)-[r]->(b)
-RETURN *a, r, b*
+RETURN *
 LIMIT 100
 ```
 
