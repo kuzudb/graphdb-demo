@@ -106,7 +106,7 @@ Alternatively, you can use the provided docker-compose.yml configured with the r
 ### Run container
 
 ```bash
-docker compose
+docker compose up
 ```
 
 ### Stop container
