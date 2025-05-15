@@ -1,0 +1,6 @@
+kuzu==0.10.0
+polars==1.29.0
+pyarrow==20.0.0
+yfiles_jupyter_graphs_for_kuzu==0.0.4
+networkx==3.4.2
+ipykernel==6.29.5
